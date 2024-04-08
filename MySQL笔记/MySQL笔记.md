@@ -57,7 +57,7 @@ select * from users;
  C-->E[数据库DB02]
  E-->表3
  E-->表4
- ```
+```
 
 ==数据中表的文件依旧是文件==
 
@@ -503,3 +503,4 @@ create or replace view user_v2 as select id,name from user_v1 where id <=20;
 ![alt text](image-1.png)
 
 ![alt text](image-4.png)
+
