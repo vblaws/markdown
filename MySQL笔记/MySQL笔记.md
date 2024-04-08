@@ -566,3 +566,180 @@ delimiter $$ # 将`$$`符号定义为结束符,不遇到mysql会认为还没有�
 ### 进阶-存储过程-变量-系统变量
 
 ![image-20240408143710121](MySQL笔记.assets/image-20240408143710121.png)
+
+设置全局变量以后,重启完就会恢复成原来的样子,如果要让设置的全局变量不失效,可以在mysql配置文件里面修改
+
+linux中为`/etc/my.cnf`
+
+windows为`C:\Program Files\MySQL\MySQL Server X.X\my.ini`
+
+### 进阶-存储过程-变量-用户自定义变量
+
+![image-20240408160230523](MySQL笔记.assets/image-20240408160230523.png)
+
+-  赋值
+
+```sql
+set @variable = expr [,@variable = expr];
+set @variable := expr [,@variable := expr];
+```
+
+```sql
+select @variable := expr [,@variable := expr];
+select 字段名 into @var_name from 表名;
+```
+
+
+
+-  使用
+
+```sql
+select @var_name;
+```
+
+下面是一些是使用的例子
+
+```sql
+--赋值
+set @my_name:='itcast';
+set @my_age:=10; #用set赋值
+
+select @my_iii :='124f'; # 用select赋值
+
+select count(*) into @student_num from student; #将查询到的结果赋值给变量
+
+--查询
+select @my_name,@my_age;
+select @student_num;
+```
+
+![image-20240408162431945](MySQL笔记.assets/image-20240408162431945.png)
+
+==在MySQL中,=同时代表赋值和比较==
+
+个人推荐使用``:=``作为赋值使用,普通`=`号用作比较
+
+
+
+### 进阶-存储过程-变量-局部变量
+
+![image-20240408183540645](MySQL笔记.assets/image-20240408183540645.png)
+
+-  声明
+
+```sql
+declare 变量名 变量类型 [default ....]; # default可以设置默认值
+变量类型:int,bigint,char,varchar,date,time等
+```
+
+-  赋值
+
+```sql
+set 变量名 = 值;
+set 变量名 :=值;
+select 字段名 into 变量名 from 表名;
+```
+
+-  查询
+
+```sql
+select 变量名;
+```
+
+
+
+### 进阶-存储过程-if判断
+
+-  if
+
+语法
+
+```sql
+if 条件1 then
+	语句
+elseif 条件2 then
+	语句
+else 
+	语句
+end if;
+```
+
+
+
+### 进阶-存储过程-参数(IN,OUT,INOUOT)
+
+-  参数
+
+| 类型  |                     含义                      | 备注 |
+| ----- | :-------------------------------------------: | ---- |
+| IN    |   该类参数作为输入,也就是需要调用是传入参数   | 默认 |
+| OUT   | 该类参数作为输出,也就是说改参数可以作为返回值 |      |
+| INOUT |     既可以作为输入参数,也可以作为输出参数     |      |
+
+-  用法
+
+```sql
+create procedure 存储过程名称([IN/OUT/INOUT 参数名 参数类型])
+begin
+	--sql语句
+end;
+```
+
+这是没有参数的
+
+```sql
+create procedure p4()
+BEGIN
+	declare score int default 58; # default可以设置默认值
+	declare result varchar(10);
+	
+	if score > 85 then 
+			set result := '优秀';
+	elseif score >=60 then
+		set result := '良好';
+	else 
+		set result := '不及格';
+	end if;
+	
+	select result;
+END;
+call p4();
+```
+
+
+
+这是一个输入一个输出的参数
+
+```sql
+create procedure p6(in score int,out result varchar(255))
+BEGIN
+	
+	if score > 85 then
+		set result := '优秀';	
+	elseif score >= 60 then
+		set result := '良好';
+	else 
+		set result := '不及格';
+	end if;
+END;
+call p6(150,@result); # 需要通过一个变量来接收返回的值
+select @result;
+```
+
+
+
+这是只有一个兼具输入和输出的参数
+
+```sql
+reate procedure p6(inout score int)
+BEGIN
+	set score := score * 0.5; 
+END
+
+set @result := 150
+
+call p6(@result); # 需要通过一个变量来接收返回的值
+
+select 	@result;
+```
+
