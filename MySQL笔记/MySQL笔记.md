@@ -504,3 +504,65 @@ create or replace view user_v2 as select id,name from user_v1 where id <=20;
 
 ![alt text](image-4.png)
 
+
+
+
+
+### 进阶-存储过程-介绍
+
+![image-20240408142712161](MySQL笔记.assets/image-20240408142712161.png)
+
+![image-20240408142730652](MySQL笔记.assets/image-20240408142730652.png)
+
+### 进阶-存储过程-基本语法
+
+-  创建存储过程
+
+```sql
+create procedure 存储过程名称([参数列表])
+begin
+	--sql语句
+end;
+```
+
+例子:
+
+```sql
+create procedure p1()
+begin
+	select count(*) from student;
+end;
+# 这几行命令意思是,创建一个名字是p1的存储过程,中间的代码代表查询在student表中有多少条记录
+```
+
+
+
+-  调用存储过程
+
+```sql
+call 名称([参数]);
+```
+
+
+
+-  查看存储过程
+
+```sql
+show create procedure 存储过程名称; # 查询整个存储过程的定义
+```
+
+-  删除存储过程
+
+```sql
+drop procedure [if exists] 存储过程名称
+```
+
+![image-20240408143403595](MySQL笔记.assets/image-20240408143403595.png)
+
+```sql
+delimiter $$ # 将`$$`符号定义为结束符,不遇到mysql会认为还没有结束，这个主要是用来预防,在命令行内创建并运行存储过程情况下,中间语句后面的分号导致语句提前结束
+```
+
+### 进阶-存储过程-变量-系统变量
+
+![image-20240408143710121](MySQL笔记.assets/image-20240408143710121.png)
