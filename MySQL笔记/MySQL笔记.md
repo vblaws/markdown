@@ -743,3 +743,33 @@ call p6(@result); # 需要通过一个变量来接收返回的值
 select 	@result;
 ```
 
+
+
+
+
+### 进阶-存储过程-case
+
+#### case
+
+-  语法1:
+
+```sql
+case case_value
+	when when_value1 then statement_list1
+	[when when_value2 then statement_list2]
+	[else statement_list]
+end case;
+```
+
+
+
+-  语法2
+
+```sql
+case 
+	when when_value1 then statement_list1
+	[when when_value2 then statement_list2]
+	[else statement_list]
+end case;
+```
+
