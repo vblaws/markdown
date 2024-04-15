@@ -871,4 +871,55 @@ fetch 游标名称 into 变量,[变量];
 close 游标名称;
 ```
 
-a
+cursor练习代码
+
+```sql
+-- cursor练习
+create procedure cursortest(in uage int)
+begin
+	# 定义变量 
+	declare uname varchar(100);
+	declare upro varchar(100);
+	# 定义一个游标来记录符合条件的结果集,要先声明普通变量再声明游标
+	declare u_cursor cursor for select name,profession from tb_user where age <= uage;
+	# 创建表结构
+	drop table if exists extb_user_pro;
+	create table if not exists tb_user_pro(
+		`id` int PRIMARY KEY AUTO_INCREMENT,
+		`name` varchar(100),
+		`profession` varchar(100)
+	# 打开游标
+	open u_cursor;
+	# 插入数据
+	while true do
+		fetch u_cursor into uname,upro;
+		insert into tb_user_pro VALUES(null,uname,upro);# 这边有一点小缺陷,下一张补全
+	end while;
+	# 关闭游标
+	close u_cursor;
+end;	
+drop procedure cursortest;
+call cursortest(100);
+
+```
+
+
+
+### 进阶-存储过程-条件处理程序-handler
+
+`条件处理程序(Handler)`可以用来定义再流程控制结构执行过程中遇到问题时相应的处理步骤,具体语法
+
+```sql
+declare handler_action handler for condition_value,[condition_value] statement;
+
+handler_action:
+	continue:继续执行当前程序
+	exit:终止执行当前程序
+condition_value:
+	SQLSTATE sqlstate_value:状态码,如02000
+	SQLWARNING:所有以01开头的SQLSTATE代码简写
+	NOT FOUND:所有以02开头的SQLSTATE代码简写
+	SQLEXCEPTION:所有没有被SQLWARNING和NOT FOUND捕获的SQLSTATE代码简写
+```
+
+以此在补充刚刚代码的小缺陷
