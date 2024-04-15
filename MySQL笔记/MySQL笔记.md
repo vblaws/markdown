@@ -694,7 +694,7 @@ BEGIN
 	declare result varchar(10);
 	
 	if score > 85 then 
-			set result := '优秀';
+		set result := '优秀';
 	elseif score >=60 then
 		set result := '良好';
 	else 
@@ -771,5 +771,103 @@ case
 	[when when_value2 then statement_list2]
 	[else statement_list]
 end case;
+```
+
+-  单引号用于定义普通字符串常量，内容会被原样处理。
+-  双引号用于标识符，如列名和表名，以及包含特殊字符或保留字的字符串。
+-  转义字符（反斜杠 `\`）用于在单引号字符串中包含单引号本身。
+
+
+
+### 进阶-存储过程-循环-while
+
+-  while循环是有条件的循环控制语句，满足条件以后，再执行循环体中的SQL语句，具体语法
+
+```sql
+while 条件 do
+	--sql语句
+end while;
+```
+
+例子:给一个数字n,返回求1+2+...+n，的结果
+
+```sql
+create procedure p7(in n int)
+begin
+	declare sum int default 0;
+	while n > 0 do
+		set sum: = sum+n;
+		set n := n - 1;
+	end while;
+	select sum;
+end;
+
+```
+
+
+
+### 进阶-存储过程-循环-repeat
+
+-  repeat
+
+repeat是具有条件的循环控制语句,当满足条件时退出,具体语法:
+
+```sql
+# 先执行一次逻辑，看看条件hi否
+repeat
+	--sql逻辑
+	until 条件
+end repeat;
+
+```
+
+### 进阶-存储过程-循环-loop
+
+-  loop
+
+loop实现简单的循环,如果不在SQL逻辑中增加退出循环的条件,可以用来实现简单的死循环,loop可以配合以下两个语句使用,
+
+-  `leave`:配合循环输出,退出循环(类似`break`)
+-  `iterate`:必须用在循环中,作用是跳过当前循环剩下的语句,直接进入下一次循环(类似`continue`)
+
+```sql
+语句:
+[beginlabel:] loop
+	--sql逻辑
+end loop [end ];
+```
+
+
+
+-  `leave`使用方法,退出指定的循环体`leave label;`
+
+-  `iterate`使用方法,直接进入下一次标记:`iterate lavel`
+
+### 进阶-存储过程-游标-cursor
+
+`游标cusor`是用来存储查询结果集的数据类型,在存储过程和函数中可以使用游标对结果集进行循环的处理,游标的使用包括游标的申明,open,fetch,close,其用法分别如下
+
+-  声明游标:
+
+```sql
+declare 游标名称 cursor for 查询语句;
+```
+
+-  打开游标
+
+```sql
+open 游标名称;
+```
+
+-  获取游标记录
+
+```sql
+fetch 游标名称 into 变量,[变量];
+```
+
+-  关闭游标
+
+```sql
+close 游标名称;
 ```
 
