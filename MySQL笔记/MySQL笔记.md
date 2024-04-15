@@ -888,6 +888,7 @@ begin
 		`id` int PRIMARY KEY AUTO_INCREMENT,
 		`name` varchar(100),
 		`profession` varchar(100)
+	);
 	# 打开游标
 	open u_cursor;
 	# 插入数据
