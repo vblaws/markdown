@@ -533,23 +533,52 @@ public boolean matches(String regex):判断是否符合`regex`这段正则,符�
         System.out.println(str3.matches("[\\w&&[^_]]{4}"));
 ```
 
-### P163-常用API,正则表达式基本练习
+### P163-常用API,正则表达式基本练习1
 
 编写正则表达式验证用户输入手机号是否符合要求
 
 ```java
-
+String str1 = "13706213154";
+String regex1 = "1[3-9][0-9]{9}";
+boolean flag1 = str1.matches(regex1);
+System.out.println(flag1);
+结果:`true`
 ```
 
 编写正则表达式验证用户输入手机号是否符合要求
 
 ```java
-
+String str2 = "020-2324242";
+String regex2 = "0[0-9]{2,3}-?[1-9]\\d{4,9}";
+boolean flag2 = str2.matches(regex2);
+System.out.println(flag2);
+System.out.println("--------------------------------------------------");
+结果:`true`
 ```
 
 编写正则表达式验证用户输入手机号是否符合要求
 
 ```java
-
+tring str3 = "3239498031@qq.com.cn";
+String regex3 = "\\w+@[\\w&&[^_]]{2,6}(\\.[a-zA-z]{2,3}){1,2}";
+boolean flag3 = str3.matches(regex3);
+System.out.println(flag3);
+结果:`true`
 ```
+
+
+
+额外:有一个插件叫`any-rule`,安装了这个插件以后查看使用文档可以直接将想要的正则显示出来
+
+>  IDEA和vscode都有
+
+```java
+String regex4 = "([01]\\d|2[0-3])(:[0-5]\\d){2}";
+String str4 = "12:12:12";
+System.out.println(str4.matches(regex4));
+```
+
+>  被小括号括住的表示一组,表示这一个整体,后面加大括号可以控制出现次数
+
+### P165-API11-正则表达式基本练习2
 
