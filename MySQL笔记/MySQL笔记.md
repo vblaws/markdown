@@ -67,6 +67,28 @@ select * from users;
 列(column),行(row)
 表的一行称为一个记录
 
+## MySQL的增删查改
+
+MySQL中如何最后一列插入
+
+```mysql
+alter table table_name add column column_name 类型 约束;
+```
+
+MySQL中如何在中间插入
+
+```mysql
+alter table table_name add column column_name 类型 约束 after 列名;
+```
+
+MySQL删除一行的数据
+
+```mysql
+delete from table_name where 条件; 
+```
+
+
+
 ## SQL语句分类
 
 - DDL:数据定义语句;[create]
@@ -195,6 +217,8 @@ WHERE your_conditions;
 
 可以通过以下命令查看secure-file-priv当前的值是什么`SHOW VARIABLES LIKE "secure_file_priv";`
 
+在MySQL中，`SHOW VARIABLES LIKE 'secure_file_priv';` 这条指令用于显示与`secure_file_priv`系统变量相关的值。`secure_file_priv`是一个安全相关的系统变量，它控制着MySQL服务器是否允许执行LOAD DATA INFILE和SELECT … INTO OUTFILE语句，以及这些语句可以将文件写入或读取到哪个目录。
+
 ![alt text](image.png)
 
 这是我的效果,说明我只能导出csv文件导出到`C:\ProgramData\MySQL\MySQL Server 8.0\Uploads\`
@@ -203,15 +227,15 @@ WHERE your_conditions;
 
 问题原因找到了，解决方案因业务需求而定。
 
-- 方案一：
+- ==方案一：==
 
 把导入文件放入`secure-file-priv`目前的`value`值对应路径即可。
 
-- 方案二：
+- ==方案二：==
 
 把`secure-file-priv`的`value`值修改为准备导入文件的放置路径。
 
-- 方案三：修改配置
+- ==方案三==
 
 去掉导入的目录限制。可修改mysql配置文件（Windows下为my.ini, Linux下的my.cnf），在[mysqld]下面，查看是否有：`secure_file_priv =`
 
@@ -228,7 +252,7 @@ WHERE your_conditions;
 ```sql
 SELECT id, name, email
 INTO OUTFILE '/tmp/user_data.csv' #保存文件的类型和位置
-FIELDS TERMINATED BY ',' # 分隔符
+FIELDS TERMINATED BY ',' # 分隔符自增主键
 LINES TERMINATED BY '\n' # 换行符
 FROM users;
 ```
@@ -239,14 +263,45 @@ FROM users;
 mysql> LOAD DATA LOCAL INFILE 'dump.txt' INTO TABLE mytbl
 ```
 
-下面是例子
+这里一开始如果出现一个问题,问题内容是`[42000][3948] Loading local data is disabled; this must be enabled on both the client and server sides`,必须接受服务端和客户端的许可
 
-```sql
+解决方式
 
-mysql> LOAD DATA LOCAL INFILE 'dump.txt' INTO TABLE mytbl
-  -> FIELDS TERMINATED BY ':'
-  -> LINES TERMINATED BY '\r\n';
+1.先输入`SHOW GLOBAL VARIABLES LIKE 'local_infile';`查看,会出现这个
+
+![image-20240423170436107](MySQL笔记.assets/image-20240423170436107.png)
+
+2.先把这个设置为ON,输入`SET GLOBAL local_infile = 'ON';`,然后再次输入`SHOW GLOBAL VARIABLES LIKE 'local_infile`查看，会出现下图
+
+![image-20240423170847565](MySQL笔记.assets/image-20240423170847565.png)
+
+3.修改配置文件
+
+找到你mysql的安装路径,找到my.ini文件,用记事本打开，在 [client] 和 [mysql] 下面，都添加上："**local_infile=ON**"
+
+不要双引号也不要#号
+
+🆗,解决
+
+如何正确导入数据
+
+　　这只是一个例子
+
+```mysql
+load data infile 'F:/MySqlData/test1.csv' --CSV文件存放路径
+into table student--要将数据导入的表名
+fields terminated by ','
+lines terminated by '\n';
 ```
+
+说明:
+
+>  LOAD DATA INFILE 'F:/MySqlData/test1.csv'：这是语句的开始，指定要加载的CSV文件的路径。在这种情况下，文件位于F盘的MySqlData文件夹中，文件名为test1.csv。
+>  INTO TABLE student：指定目标表，即要将数据导入的表名为student。
+>  FIELDS TERMINATED BY ','：指定字段分隔符，这里是用逗号(,)分隔每个字段。
+>  LINES TERMINATED BY '\r\n'：指定行终止符，这里使用回车换行符(\r\n)表示每行的结束。
+
+
 
 ### DCL语句操作
 
