@@ -1,12 +1,20 @@
 # 题目
 
-环境:
 
->  centos7-1511
->
->  yum源:aliyun网络源
->
->  安装epelyuan
 
-### 搭建samba服务器
+
+
+## 搭建samba服务器
+
+### 1:安装samba
+
+方式1:直接使用包管理器安装
+
+```shell
+sudo pacman -S samba
+```
+
+方式2
+
+2:修改配置文件
 
