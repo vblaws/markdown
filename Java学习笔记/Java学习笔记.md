@@ -586,3 +586,87 @@ System.out.println(str4.matches(regex4));
 
 在想要不区分大小写的字符前面写上(?i),如果在中间,那就((?i)字符)
 
+
+
+### P169-API-15-JDK7时间-Date
+
+Date类是一个JDK写好的JavaBean类,用来描述时间,精确到毫秒.
+利用空参创造的对象,默认表示系统当前时间
+利用有参构造创建的对象表示指定的时间
+
+|方法类型|代码|描述|
+|:-:|:-:|:-:|
+|构造方法|public Date()|创建Date,表示当前时间|
+|构造方法|public Date(long date)|创建Date,表示指定时间|
+|成员方法|public void setTIme(long time)|设置/修改毫秒植|
+|成员方法|public long getTime()|获取时间对象的毫秒值|
+
+小练习代码
+
+```java
+package JavaP169;
+
+import java.util.Date;
+import java.util.Random;
+
+public class DateDemo2 {
+    public static void main(String[] args) {
+        date();
+        System.out.println();
+        bigOrSmall();
+
+    }
+
+    public static void date() {
+        //获取时间原点,就是格林威治时间,中国是+8个小时
+如果是Date date = new Date();就是获取当前时间 
+        Date date = new Date(0l);
+
+        System.out.println(date);
+        //获取当前时间毫秒值
+        long time = date.getTime();
+        System.out.println(time);
+        //一年时间的毫秒值,要加l因为是long类型       
+        time = time + 1000l * 60 * 60 * 24 * 365;
+        //设置时间
+        date.setTime(time);
+
+        System.out.println(date);
+    }
+
+    public static void bigOrSmall() {
+        //就是取出毫秒值,然后对毫秒值进行比较大小
+        Random random = new Random();
+        Date d1 = new Date(random.nextLong());
+        Date d2 = new Date(random.nextLong());
+        System.out.println(d1);
+        System.out.println(d2);
+        long d1Time = d1.getTime();
+        long d2Time = d2.getTime();
+        boolean result = d1Time > d2Time ? true : false;
+        if (result) {
+            System.out.println("d1>d2");
+        } else {
+            System.out.println("d1<d2");
+        }
+    }
+}
+ 
+
+```
+### P170-API-16-JDK7时间-SimpleDateFormat
+
+> SimpleDateFormat类作用
+
+- 格式化:把时间变成喜欢的格式
+- 解析:把字符串表示为Date对象
+
+|构造方法|说明|
+|:-:|:-:|
+|public SimpleDateFormat()|构造一个SimpleDateFormat,使用默认格式|
+|public SimpleDateFormat(String pattern)|构造一个SimpleDateFormat,使用指定格式|
+
+|常用方法|说明|
+|:-:|:-:|    
+|public final String format(Date date)|格式化(日期对象-> 字符串)|
+|public Date parse(String source)|解析(字符串->日期对象)|
