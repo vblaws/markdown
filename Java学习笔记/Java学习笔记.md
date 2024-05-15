@@ -666,7 +666,19 @@ public class DateDemo2 {
 |public SimpleDateFormat()|构造一个SimpleDateFormat,使用默认格式|
 |public SimpleDateFormat(String pattern)|构造一个SimpleDateFormat,使用指定格式|
 
+|字符|说明|
+|:-:|:-:|
+|y|年|
+|M|月|
+|d|日|
+|E|星期|
+|a|AM/PM说明|
 |常用方法|说明|
 |:-:|:-:|    
 |public final String format(Date date)|格式化(日期对象-> 字符串)|
 |public Date parse(String source)|解析(字符串->日期对象)|
+
+```练习代码
+
+
+```
