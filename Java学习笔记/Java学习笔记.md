@@ -772,3 +772,14 @@ public class SimDaFor {
 
 ```
 
+### P171 常用API-17-JDK时间-Calendar
+
+- Calender代表了当前的时间的日历对象,可以单独修改,获取时间中的年,月,日
+- 细节:Calender是一个抽象类,不能直接创建对象
+
+所以要通过Calender中的静态方法获取Calender对象
+
+|方法名|说明|
+|:-:|:-:|
+|public static Calender getInstance()|获取当前时间的日历对象|
+
