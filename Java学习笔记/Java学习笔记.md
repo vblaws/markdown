@@ -781,6 +781,87 @@ public class SimDaFor {
 
 |方法名|说明|
 |:-:|:-:|
-|public static Calender getInstance()|获取当前时间的日历对象|
+|public static Calender getInstance()|获取当前时间的日历对象|\
 
-a
+Calendar常用方法
+
+| 方法名                                 | 说明                        |
+| -------------------------------------- | --------------------------- |
+| public final Date getTime()            | 获取时间对象                |
+| public final void setTime()            | 给日历设置日期对象          |
+| public long getTimeInMillis()          | 拿到时间毫秒值              |
+| public void setTimeInMillis()          | 给日历设置时间毫秒值        |
+| public int get(int field)              | 取日历中某个字段的信息      |
+| public void set(int field,int value)   | 修改日历的某个字段的信息    |
+| public void add(int field,int  amount) | 为某个字段增加/减少指定的值 |
+
+底层原理:会根据系统的不同失去获取不同的日历对象,默认表示当前时间
+
+
+
+细节2:
+
+- input
+
+```java
+Date d = new Date(0l);
+calendar.setTime(d);
+System.out.println(calendar);
+```
+
+- output
+
+```txt
+java.util.GregorianCalendar[time=0,areFieldsSet=true,areAllFieldsSet=true,lenient=true,zone=sun.util.calendar.ZoneInfo[id="Asia/Shanghai",offset=28800000,dstSavings=0,useDaylight=false,transitions=31,lastRule=null],firstDayOfWeek=2,minimalDaysInFirstWeek=1,ERA=1,YEAR=1970,MONTH=0,WEEK_OF_YEAR=1,WEEK_OF_MONTH=1,DAY_OF_MONTH=1,DAY_OF_YEAR=1,DAY_OF_WEEK=5,DAY_OF_WEEK_IN_MONTH=1,AM_PM=0,HOUR=8,HOUR_OF_DAY=8,MINUTE=0,SECOND=0,MILLISECOND=0,ZONE_OFFSET=28800000,DST_OFFSET=0]
+```
+
+这里返回的月份是0,是因为这个范围是0-11,0实际上是1月
+
+在老外眼中,周日是一周第一天,所以1(星期日),2(星期1)
+
+
+
+/*
+
+​         \* | public int get(int field) | 取日历中某个字段的信息 |
+
+​         \* | public void set(int field,int value) | 修改日历的某个字段的信息 |
+
+​         \* | public void add(int field,int amount) | 为某个字段增加/减少指定的值 |
+
+​         */
+
+fieled
+
+​        // 0:纪元
+
+​        // 1:年
+
+​	//2:月
+
+​        // 3.一年中的第几周
+
+​        // 4.一个月中的第几周
+
+​        // 5.一个月中的第几天
+
+​        // ..
+
+​        // 16:
+
+// 不过:Java为了方便,把索引的数字定义为常量,在Calendar类中可以看到
+
+例子:
+
+```java
+		int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int week = calendar.get(Calendar.DAY_OF_WEEK);
+        System.out.println(year + "," + month + "," + day + "," + week);
+		=============
+		1970,1,1,5
+```
+
+
+
