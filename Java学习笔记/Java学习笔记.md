@@ -874,4 +874,59 @@ fieled
   - JDK8简单
 - 安全曾面
   - JDK7多线程环境下数据安全问题
-  - JDK8时间按对象不可逆,安全
+  - JDK8时间按对象不可变,所以安全一点
+
+JDK8新增类
+
+1. Date类
+   1. ZoneId:时区
+   2. Instant:时间戳
+   3. ZoneDateTime:带时区的时间
+2. 日期格式化类SimpleDateFormat
+   1. DateTimeFormatter:用于时间的格式化和解析
+3. 日历类:Calendar
+   1. LocalDate:年,月，日
+   2. LocalTime:时分,秒
+   3. LocalDateTime:年,月,日,时分,秒
+4. 工具类
+   1. Duration:时间间隔(秒,纳秒)
+   2. Period:时间间隔(年，月，日)
+   3. ChronoUnit:时间间隔(所有单位)
+
+- ZoneId时区
+
+> Asia/Shanghai
+>
+> Asia/Taipei
+>
+> Asia/Chongqing 
+
+| 方法名                                   | 说明                     |
+| ---------------------------------------- | ------------------------ |
+| static Set<String> getAvailableZoneIds() | 获取Java中所有支持的时区 |
+| static ZoneId systeemDefault()           | 获取系统默认时区         |
+| static ZoneId of(String zoneId)          | 获取一个知道那个的时区   |
+|                                          |                          |
+
+- Instant时间戳
+
+| 方法名                                  | 说明                                |
+| --------------------------------------- | ----------------------------------- |
+| static Intant now()                     | 获取当前时间的Instant对象(标准时间) |
+| static Instant ofXxxx(long epochMilli)  | 根据 (秒,毫秒,纳秒)获取时间对象     |
+| ZoneDateTime atZone(ZoneId zone)        | 指定时区                            |
+| boolean isXxx(Instant otherInstant)     | 判断时间先后的方法                  |
+| Instant minusXxx(Long millisToSubtract) | 减少时间系列的方法                  |
+| Instant plusXxx(Long millisToSubtract)  | 增加时间系列的方法                  |
+|                                         |                                     |
+
+- ZoneDateTime带时区时间
+
+| 方法名                          | 说明                           |
+| ------------------------------- | ------------------------------ |
+| static ZoneDateTime now()       | 获取当前时间的ZoneDateTime对象 |
+| static ZoneDateTime ofXxxx(...) | 获取指定时间的ZoneDateTime对象 |
+| ZoneDateTime withXxx(时间)      | 修改时间系列的方法             |
+| ZoneDateTime minusXxxx(时间)    | 减少时间系列的方法             |
+| ZoneDateTime plusXxx(时间)      | 增加时间系列的方法             |
+
