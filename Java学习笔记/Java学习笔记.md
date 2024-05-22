@@ -1037,11 +1037,11 @@ public class ZoneDateTimeTest {
         ZonedDateTime zonedDateTime = ZonedDateTime.now();
         System.out.println(zonedDateTime);
         // 获取指定的时间对象(带时区)参数(年,月,日,时,分,秒,纳秒,时区)
-        ZonedDateTime zonedDateTime2 = ZonedDateTime.of(2000, 2, 3, 23, 12, 22, 10000, ZoneId.systemDefault());
+        ZonedDateTime zonedDateTime2 = ZonedDateTime.of(2000, 2, 3, 23, 12, 22, 10000,ZoneId.systemDefault());
         System.out.println(zonedDateTime2);
         // 通过Instant+时区方式获取时间对象
         Instant instantTest = Instant.ofEpochSecond(0l);
-        ZonedDateTime zonedDateTime3 = ZonedDateTime.ofInstant(instantTest, ZoneId.systemDefault());
+        ZonedDateTime zonedDateTime3 = ZonedDateTime.ofInstant(instantTest,ZoneId.systemDefault());
         System.out.println(zonedDateTime3);
         // 3. withXxx修改时间
         ZonedDateTime zonedDateTime4 = zonedDateTime3.withYear(2000);
@@ -1103,10 +1103,225 @@ public class DateTimeFormatterTest {
 
 LocalTime,LocalDate,LocalDateTime
 
-| 方法名           | 说明                     |
-| ---------------- | ------------------------ |
-| static XXX now() | 获取当前时间对象         |
-| static XXX of()  | 获取指定时间对象         |
-| get开头          | 获取日历中的年月日时分秒 |
-| isBefore         |                          |
+| 方法名            | 说明                     |
+| ----------------- | ------------------------ | 
+| static XXX now()  | 获取当前时间对象         |
+| static XXX of()   | 获取指定时间对象         |
+| get开头           | 获取日历中的年月日时分秒 |
+| isBefore，isAfter | 比较两个时间先后         |
+| with开头          | 修改时间                 |
+| minus开头         | 减少时间                 |
+| plus开头          | 增加时间                 |
+
+代码
+
+```java
+package JDK8newCkass.LocalTest;
+
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.MonthDay;
+
+public class localtest {
+    public static void main(String[] args) {
+        /*
+         * | 方法名 | 说明 |
+         * | ----------------- | ------------------------ |
+         * | static XXX now() | 获取当前时间对象 |
+         * | static XXX of() | 获取指定时间对象 |
+         * | get开头 | 获取日历中的年月日时分秒 |
+         * | isBefore，isAfter | 比较两个时间先后 |
+         * | with开头 | 修改时间 |
+         * | minus开头 | 减少时间 |
+         * | plus开头 | 增加时间 |
+         */
+        // 获取当前的时间
+        LocalDate localDate = LocalDate.now();
+        System.out.println(localDate);
+
+        // 获取指定的时间
+        LocalDate localDate0 = LocalDate.of(2000, 2, 12);
+        System.out.println(localDate0);
+
+        // 获取年
+        int year = localDate.getYear();
+        System.out.println(year);
+
+        // 获取月
+        // 方式一
+        Month m = localDate.getMonth();
+        System.out.println(m.getValue());
+        System.out.println("============================");
+        // 方式二
+        int month = localDate.getMonthValue();
+        System.out.println(month);
+        System.out.println("============================");
+        // 获取日
+        int day = localDate.getDayOfYear();
+        System.out.println(day);
+        // 判断是否是生日
+        LocalDate l1 = LocalDate.of(2007, 1, 26);
+        LocalDate l2 = LocalDate.now();
+        // 月日对象
+        MonthDay m1 = MonthDay.of(l1.getMonthValue(), l1.getDayOfMonth());
+        MonthDay m2 = MonthDay.from(l2);
+        System.out.println("今天是你生日吗" + m1.equals(m2));
+        System.out.println("============================");
+        // 判断时间先后
+        if (localDate.isBefore(localDate0)) {
+            System.out.println("当前时间更快");
+        } else {
+            System.out.println("后面");
+        }
+        // LocalTime与LocalDate相似
+        /*
+         * LocalDateTime dt = LocalDateTime.now(); // 当前日期和时间
+         * LocalDate d = dt.toLocalDate(); // 转换到当前日期
+         * LocalTime t = dt.toLocalTime(); // 转换到当前时间
+         */
+    }
+}
+```
+
+### 工具类Duration,Period,ChronoUnit
+
+- Duration:用于计算两个时间间隔(秒,纳秒)
+
+代码:
+
+```java
+package JDK8newCkass.时间间隔类;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
+
+public class durationDemo {
+    public static void main(String[] args) {
+        // 本地时间对象
+        LocalDateTime today = LocalDateTime.now();
+        System.out.println(today);
+
+        // 出生日期时间对象
+        LocalDateTime birthDay = LocalDateTime.of(2007, 1, 26, 12, 55, 10);
+        System.out.println(birthDay);
+        // 获取时间间隔对象duration,第二个减掉第一格
+        Duration duration = Duration.between(birthDay, today);
+        System.out.println("duration时间对象" + duration);
+        System.out.println(duration.toDays()); // 日
+        System.out.println(duration.toHours()); // 时
+        System.out.println(duration.toMinutes()); // 分
+        System.out.println(duration.toSeconds()); // 秒
+        System.out.println(duration.toMillis()); // 毫秒
+        System.out.println(duration.toNanos()); // 纳秒
+    }
+}
+```
+
+
+
+- Period:用于计算两个时间间隔(年，月，日)
+
+代码:
+
+```java
+package JDK8newCkass.时间间隔类;
+
+import java.time.LocalDate;
+import java.time.Period;
+
+public class periodDemo {
+    public static void main(String[] args) {
+        // 获取生日
+        LocalDate birDate = LocalDate.of(2007, 1, 26);
+        // 获取当前时间
+        LocalDate today = LocalDate.now();
+
+        // 时间间隔Period,第二各参数减掉第一格参数,会返回一个时间间隔对象
+        Period period = Period.between(birDate, today);
+        System.out.println("时间对象" + period);
+        // 打印出间隔的年份，月,日
+        System.out
+                .println("你现在已经活了\n" + period.getYears() + "年\n" + period.getMonths() + "月\n" + period.getDays() + "日,💪");
+    }
+}
+```
+
+
+
+- ChronoUnit:计算两个时间间隔(所有单位)**重要**
+
+代码:
+
+```java
+package JDK8newCkass.时间间隔类;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
+public class chronoUnitDemo {
+    public static void main(String[] args) {
+        // 本地时间对象
+        LocalDateTime today = LocalDateTime.now();
+        System.out.println(today);
+
+        // 出生日期时间对象
+        LocalDateTime birthDay = LocalDateTime.of(2007, 1, 26, 12, 55, 10);
+        System.out.println(birthDay);
+
+        System.out.println("相差年份:" + ChronoUnit.YEARS.between(birthDay, today)); // 比较年,以此类推
+        System.out.println("相差月份:" + ChronoUnit.MONTHS.between(birthDay, today));
+        System.out.println("相差周:" + ChronoUnit.WEEKS.between(birthDay, today));
+        System.out.println("相差天:" + ChronoUnit.DAYS.between(birthDay, today));
+        System.out.println("相差时:" + ChronoUnit.HOURS.between(birthDay, today));
+        System.out.println("相差分:" + ChronoUnit.MINUTES.between(birthDay, today));
+        System.out.println("相差秒:" + ChronoUnit.SECONDS.between(birthDay, today));
+        System.out.println("相差毫秒:" + ChronoUnit.MILLIS.between(birthDay, today));
+        System.out.println("相差微妙:" + ChronoUnit.NANOS.between(birthDay, today));
+        System.out.println("相差的半天数:" + ChronoUnit.HALF_DAYS.between(birthDay, today));
+        System.out.println("相差的十年数:" + ChronoUnit.DECADES.between(birthDay, today));
+        System.out.println("相差的世纪数:" + ChronoUnit.CENTURIES.between(birthDay, today));
+        System.out.println("相差千年:" + ChronoUnit.MILLENNIA.between(birthDay, today));
+        System.out.println("相差纪元:" + ChronoUnit.ERAS.between(birthDay, today));
+    }
+}
+
+```
+
+## 包装类
+
+什么是包装类
+
+> 包装类:是基本数据类型的引用类型
+
+![](./Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.assets/unknown_003.png)
+
+为什么要去学习包装类
+
+> 因为很多方法的参数都是Object类型的,但是此时基本数据类型就不行了,而且在后面,集合里面只能存引用数据类型
+
+包装类对应关系
+
+| 基本数据类型 | 对应的包装类 |
+| ------------ | ------------ |
+| byte         | Byte         |
+| short        | Short        |
+| char         | Character    |
+| int          | Integer      |
+| long         | Long         |
+| float        | Float        |
+| double       | Double       |
+| boolean      | Boolean      |
+
+这里以*Integer*作为例子
+
+创建Integer的方法
+
+| 方法                                              | 说明                                       |
+| ------------------------------------------------- | ------------------------------------------ |
+| pubilc Integer(int value)                         | 根据传递的整数创建一个Integer对象,已过时   |
+| pubilc Integer(String s)                          | 根据传递的字符串创建一个Integer对象,已过时 |
+| public static Integer valueOf(int value)          | 根据传递的整数创建一个Integer对象          |
+| public static Integer valueOf(String s)           | 根据传递的字符串创建一个Integer对象        |
+| public static Integer valueOf(String s,int radix) | 根据传递的字符串和进制创建一个Integer对象  |
 
