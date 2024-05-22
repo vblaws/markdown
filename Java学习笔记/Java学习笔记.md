@@ -1,3 +1,7 @@
+[toc]
+
+
+
 # Java学习
 
 ## P157-常用API学习-System
@@ -588,7 +592,7 @@ System.out.println(str4.matches(regex4));
 
 
 
-### P169-API-15-JDK7时间-Date
+## P169-API-15-JDK7时间-Date
 
 Date类是一个JDK写好的JavaBean类,用来描述时间,精确到毫秒.
 利用空参创造的对象,默认表示系统当前时间
@@ -654,7 +658,7 @@ public class DateDemo2 {
  
 
 ```
-### P170-API-16-JDK7时间-SimpleDateFormat
+## P170-API-16-JDK7时间-SimpleDateFormat
 
 > SimpleDateFormat类作用
 
@@ -772,7 +776,7 @@ public class SimDaFor {
 
 ```
 
-### P171 常用API-17-JDK时间-Calendar
+## P171 常用API-17-JDK时间-Calendar
 
 - Calender代表了当前的时间的日历对象,可以单独修改,获取时间中的年,月,日
 - 细节:Calender是一个抽象类,不能直接创建对象
@@ -865,7 +869,7 @@ fieled
 
 
 
-# P172 常用API-18-JDK8时间类-时区,时间
+## P172 常用API-18-JDK8时间类-时区,时间
 
 为什么要学习JDK8新增时间相关类
 
@@ -893,6 +897,8 @@ JDK8新增类
    2. Period:时间间隔(年，月，日)
    3. ChronoUnit:时间间隔(所有单位)
 
+### Date相关类
+
 - ZoneId时区
 
 > Asia/Shanghai
@@ -908,6 +914,35 @@ JDK8新增类
 | static ZoneId of(String zoneId)          | 获取一个知道那个的时区   |
 |                                          |                          |
 
+代码
+
+```java
+package JDK8newCkass.Zone;
+
+import java.time.ZoneId;
+
+public class ZoneIdTest {
+    public static void main(String[] args) {
+        // Zone时区
+        // 获取所有时区名称
+        for (String string : ZoneId.getAvailableZoneIds()) {
+            System.out.println(string);
+        }
+        System.out.println("+++++++++++++++++++");
+        // 获取系统默认时区
+        ZoneId zoneId = ZoneId.systemDefault();
+        System.out.println(zoneId);
+        System.out.println("+++++++++++++++++++");
+        // 获取指定时区
+        ZoneId zoneId2 = ZoneId.of("Asia/Taipei");
+        System.out.println(zoneId2);
+    }
+}
+
+```
+
+
+
 - Instant时间戳
 
 | 方法名                                  | 说明                                |
@@ -918,7 +953,55 @@ JDK8新增类
 | boolean isXxx(Instant otherInstant)     | 判断时间先后的方法                  |
 | Instant minusXxx(Long millisToSubtract) | 减少时间系列的方法                  |
 | Instant plusXxx(Long millisToSubtract)  | 增加时间系列的方法                  |
-|                                         |                                     |
+
+代码:
+
+```java
+package JDK8newCkass.Zone;
+
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+
+public class InstantTest {
+    public static void main(String[] args) {
+        // Instant时间戳
+        // 获取当前时间Instant对象
+        Instant instant = Instant.now();
+        System.out.println(instant);
+        // 根据指定秒钟/毫秒/纳秒/获取Instant对象
+        Instant instant2 = Instant.ofEpochSecond(10);
+        System.out.println(instant2);
+        // 指定时区
+        ZonedDateTime instant3 = Instant.now().atZone(ZoneId.of("Asia/Shanghai"));
+        System.out.println(instant3);
+
+        // isXxx判断时间
+        Instant instant4 = Instant.ofEpochSecond(0l);
+        Instant instant5 = Instant.ofEpochSecond(1000l);
+        if (instant4.isBefore(instant5)) {
+            System.out.println("[]");
+        }
+        // minusXxxx(long millisToSubtract) 减少时间的方法
+        Instant instant6 = Instant.ofEpochSecond(500l);
+        System.out.println(instant6);
+        // 因为Instant对象是不可修改的,所以这个方法会产生一个新的Instant对象
+        Instant instant7 = instant6.minusSeconds(1000l);
+        System.out.println(instant7);
+        // plusXxxx(long millisToSubtract) 增加时间的方法
+        Instant instant8 = Instant.ofEpochSecond(0l);
+        System.out.println(instant8);
+        Instant instant9 = instant8.plusSeconds(1l);
+        System.out.println(instant9);
+
+    }
+}
+
+```
+
+
+
+
 
 - ZoneDateTime带时区时间
 
@@ -929,4 +1012,101 @@ JDK8新增类
 | ZoneDateTime withXxx(时间)      | 修改时间系列的方法             |
 | ZoneDateTime minusXxxx(时间)    | 减少时间系列的方法             |
 | ZoneDateTime plusXxx(时间)      | 增加时间系列的方法             |
+
+代码:
+
+```java
+package JDK8newCkass.Zone;
+
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+
+public class ZoneDateTimeTest {
+    public static void main(String[] args) {
+        /*
+         * | 方法名 | 说明 |
+         * | ------------------------------- | ------------------------------ |
+         * | static ZoneDateTime now() | 获取当前时间的ZoneDateTime对象 |
+         * | static ZoneDateTime ofXxxx(...) | 获取指定时间的ZoneDateTime对象 |
+         * | ZoneDateTime withXxx(时间) | 修改时间系列的方法 |
+         * | ZoneDateTime minusXxxx(时间) | 减少时间系列的方法 |
+         * | ZoneDateTime plusXxx(时间) | 增加时间系列的方法 |
+         */
+        // 获取当前时间的ZoneDateTime对象
+        ZonedDateTime zonedDateTime = ZonedDateTime.now();
+        System.out.println(zonedDateTime);
+        // 获取指定的时间对象(带时区)参数(年,月,日,时,分,秒,纳秒,时区)
+        ZonedDateTime zonedDateTime2 = ZonedDateTime.of(2000, 2, 3, 23, 12, 22, 10000, ZoneId.systemDefault());
+        System.out.println(zonedDateTime2);
+        // 通过Instant+时区方式获取时间对象
+        Instant instantTest = Instant.ofEpochSecond(0l);
+        ZonedDateTime zonedDateTime3 = ZonedDateTime.ofInstant(instantTest, ZoneId.systemDefault());
+        System.out.println(zonedDateTime3);
+        // 3. withXxx修改时间
+        ZonedDateTime zonedDateTime4 = zonedDateTime3.withYear(2000);
+        System.out.println(zonedDateTime4);
+        // 4. 减少时间
+        ZonedDateTime zonedDateTime5 = zonedDateTime4.minusYears(1000l);
+        System.out.println(zonedDateTime5);
+        // 4.增加时间
+        ZonedDateTime zonedDateTime6 = zonedDateTime5.plusYears(20l);
+        System.out.println(zonedDateTime6);
+        // 细节:JDK8以后的时间对象都是不可以变得,所以如果我们修改了减少了增加了时间
+        // 调用者不会发生改变,而是产生一个新的对象
+
+    }
+}
+
+```
+
+### 格式化相关类
+
+DateTimeFormatter用于时间的格式化和解析
+
+| 方法名                                   | 说明               |
+| ---------------------------------------- | ------------------ |
+| static DateTimeFormatter ofPattern(格式) | 获取格式化对象     |
+| String format(时间对象)                  | 按照指定方式格式化 |
+
+代码
+
+```java
+package JDK8newCkass.SimpleDateFormat;
+
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
+public class DateTimeFormatterTest {
+    public static void main(String[] args) {
+        /*
+         * | 方法名 | 说明 |
+         * | ---------------------------------------- | ------------------ |
+         * | static DateTimeFormatter ofPattern(格式) | 获取格式化对象 |
+         * | String format(时间对象) | 按照指定方式格式化 |
+         */
+        Instant i1 = Instant.ofEpochSecond(0l);
+        ZonedDateTime z1 = ZonedDateTime.ofInstant(i1, ZoneId.systemDefault());
+        System.out.println(z1);
+        // 创建格式化/解析器
+        DateTimeFormatter d1 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        // 格式化
+        System.out.println(d1.format(z1));
+    }
+}
+
+```
+
+### 日历相关类
+
+LocalTime,LocalDate,LocalDateTime
+
+| 方法名           | 说明                     |
+| ---------------- | ------------------------ |
+| static XXX now() | 获取当前时间对象         |
+| static XXX of()  | 获取指定时间对象         |
+| get开头          | 获取日历中的年月日时分秒 |
+| isBefore         |                          |
 
