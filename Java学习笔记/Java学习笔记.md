@@ -1290,17 +1290,17 @@ public class chronoUnitDemo {
 
 ## 包装类
 
-什么是包装类
+### 什么是包装类
 
 > 包装类:是基本数据类型的引用类型
 
 ![](./Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.assets/unknown_003.png)
 
-为什么要去学习包装类
+### 为什么要去学习包装类
 
 > 因为很多方法的参数都是Object类型的,但是此时基本数据类型就不行了,而且在后面,集合里面只能存引用数据类型
 
-包装类对应关系
+### 包装类对应关系
 
 | 基本数据类型 | 对应的包装类 |
 | ------------ | ------------ |
@@ -1315,7 +1315,7 @@ public class chronoUnitDemo {
 
 这里以*Integer*作为例子
 
-创建Integer的方法
+### 创建Integer的方法
 
 | 方法                                              | 说明                                       |
 | ------------------------------------------------- | ------------------------------------------ |
@@ -1324,4 +1324,36 @@ public class chronoUnitDemo {
 | public static Integer valueOf(int value)          | 根据传递的整数创建一个Integer对象          |
 | public static Integer valueOf(String s)           | 根据传递的字符串创建一个Integer对象        |
 | public static Integer valueOf(String s,int radix) | 根据传递的字符串和进制创建一个Integer对象  |
+
+要实现包装类的相加,需要非常麻烦
+
+###  手动拆箱与装箱
+
+```java
+老方法
+// 装箱
+Integer i1 = new Integer(1);
+Integer i2 = new Integer(2);
+int n1 = i1.intValue();
+int n2 = i2.intValue();
+int result = n1 + n2;
+//装箱
+
+Integer i3 = new Integer(result);
+```
+
+### 所以在JDK5以后,提出了自动装箱和自动拆箱
+
+
+
+![](./Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.assets/unknown_006.png)
+
+### Integer成员方法
+
+| 方法名                                     | 说明                                  |
+| ------------------------------------------ | ------------------------------------- |
+| public static String toBinaryString(int i) | 得到二进制                            |
+| public static String toOctalString(int i)  | 得到八进制                            |
+| public static String toHexString(int i )   | 得到十六进制                          |
+| public static int parselnt(Stirng s)       | 将字符串类型的整数转换为int类型的整数 |
 
