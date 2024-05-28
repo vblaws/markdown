@@ -1357,3 +1357,223 @@ Integer i3 = new Integer(result);
 | public static String toHexString(int i )   | 得到十六进制                          |
 | public static int parselnt(Stirng s)       | 将字符串类型的整数转换为int类型的整数 |
 
+## P176-API-22-几道练习题
+
+1. 用jdk7和jdk8实现一个程序,用来计算自己活了多少天
+
+```java
+package 包装类后的小练习;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+
+public class myBirthDemo {
+    public static void main(String[] args) throws ParseException {
+        getMyBirth7();
+        getMyBirth8();
+    }
+
+    public static void getMyBirth7() throws ParseException {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("输入你的生日,格式为xxxx年xx月xx日");
+        String birth = sc.nextLine();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日");
+        Date my_birth = simpleDateFormat.parse(birth);
+        long myBirthTime = my_birth.getTime();
+        // 获取当前毫秒值
+        long myNowTime = System.currentTimeMillis();
+        // 获取相隔时间毫秒值
+        long result = myNowTime - myBirthTime;
+        // 计算相隔多少天
+        System.out.println("我已经活了" + result / 1000 / 60 / 60 / 24 + "天了");
+        sc.close();
+    }
+
+    public static void getMyBirth8() {
+        LocalDate myBirth = LocalDate.of(2007, 1, 26);
+        LocalDate myNowTime = LocalDate.now();
+        System.out.println("我已经活" + ChronoUnit.DAYS.between(myBirth, myNowTime) + "天了");
+    }
+}
+
+```
+
+
+
+2. 用jdk7和jdk8实现判断是否是闰年
+
+```java
+package 包装类后的小练习;
+
+import java.time.LocalDate;
+import java.util.Calendar;
+
+public class getRunYear {
+    public static void main(String[] args) {
+        // 方法1
+        if (yOnRun7(2001)) {
+            System.out.println("平年");
+        } else {
+            System.out.println("闰年");
+        }
+        System.out.println("=======================");
+        // 方法2
+        if (yOnRun8(2001)) {
+            System.out.println("平年");
+        } else {
+            System.out.println("闰年");
+        }
+        // 方法3:LocalDate有一个方法可以直接判断是否是闰年
+        LocalDate ld = LocalDate.of(2000, 3, 1);
+        if (ld.isLeapYear()) {
+            System.out.println("是闰年");
+        } else {
+            System.out.println("是平年");
+        }
+    }
+
+    public static boolean yOnRun7(int year) {
+        Calendar calendar = Calendar.getInstance();
+        // 设置时间
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONDAY, 2);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        // 将日期剪掉1看是28还是29天,来判断是闰年还是平年
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        System.out.println(day);
+        if (day == 28) {
+            return true;
+        }
+        return false;
+
+    }
+
+    public static boolean yOnRun8(int year) {
+        // 设置日期
+        LocalDate localDate = LocalDate.of(year, 3, 1);
+        // 减掉1天
+        LocalDate localDate2 = localDate.minusDays(1);
+        // 获取当前时间
+        int day = localDate2.getDayOfMonth();
+        System.out.println(day);
+        if (day == 28) {
+            return true;
+        }
+        return false;
+
+    }
+}
+```
+
+3. 自动装箱的练习
+
+```java
+package 包装类后的小练习;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class testDemo {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        ArrayList<Integer> list = new ArrayList<>();
+        while (true) {
+            System.out.println("请输入数字");
+            int num = sc.nextInt();
+            if (num >= 1 && num <= 100) {
+                // 在添加的时候使用到了Java的自动装箱
+                list.add(num);
+
+                if (getSum(list) > 200) {
+                    System.out.println("你输入的数字满足条件(>200)正在跳出");
+                    for (Integer integer : list) {
+                        System.out.print(integer + " ");
+                    }
+                    break;
+                }
+            } else {
+                System.out.println("请重新输入");
+            }
+        }
+        sc.close();
+    }
+
+    private static int getSum(ArrayList<Integer> list) {
+        // TODO Auto-generated method stub
+        int sum = 0;
+        for (Integer i : list) {
+            sum += i;
+        }
+        return sum;
+    }
+}
+```
+
+4. 提供一个int类型数字返回对应的二进制(字符串类型),等同于实现toBinaryString
+
+```java
+package 包装类后的小练习;
+
+public class toBinaryStringDemo {
+    public static void main(String[] args) {
+
+        System.out.println(mytoBinaryString(6));
+        System.out.println(Integer.toBinaryString(6));
+    }
+
+    public static String mytoBinaryString(int number) {
+        StringBuilder sB = new StringBuilder();
+        while (true) {
+            if (number == 0) {
+                break;
+            } else {
+                int result = number % 2;
+                // append是在后面添加,这里可以用insert来插到前面
+                // sB.append(result);
+                sB.insert(0, result);
+                number /= 2;
+            }
+        }
+        return sB.toString();
+    }
+}
+```
+
+5. 手动实现parseInt的方法
+
+```java
+package 包装类后的小练习;
+
+import JavaP165.regexDemo;
+
+public class toParseInt {
+    // 手动实现parseInt方法效果
+    public static void main(String[] args) {
+        int result = toParseInt("123455");
+        System.out.println(result);
+    }
+
+    public static int toParseInt(String str) {
+        if (str.matches("[1-9]\\d{0,9}")) {
+            System.out.println("yes");
+        }
+        int number = 0;
+        for (int i = 0; i < str.length(); i++) {
+            // '1' - 50
+            // '0' - 49
+            // '1' - '0' = 1
+            // '2' - '0' = 2
+            int c = str.charAt(i) - '0';
+            number = number * 10 + c;
+        }
+        return number;
+    }
+
+}
+
+```
+
