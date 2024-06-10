@@ -1577,3 +1577,48 @@ public class toParseInt {
 
 ```
 
+## P177-常见算法-01-基本,二分,插值和斐波那契
+
+企业中的常见算法:**高德地图导航最优路线算法**,**外卖平台选择怎么搭配最便宜的算法**,**短视频推荐视频算法**
+
+1. 查找算法
+
+   1. 基本查找
+
+      ​	也叫做顺序查找
+
+
+   ​        说明：顺序查找适合于存储结构为数组或者链表。
+
+   > **基本思想**：顺序查找也称为线形查找，属于无序查找算法。从数据结构线的一端开始，顺序扫描，依次将遍历到的结点与要查找的值相比较，若相等则表示查找成功；若遍历结束仍没有找到相同的，表示查找失败。
+
+   ```java
+   package 常见算法.查找算法;
+   
+   public class baseSelect {
+       public static void main(String[] args) {
+           int[] arr = { 1, 2, 33, 22, 11, 33 };
+           if (selectNum(arr, 12)) {
+               System.out.println("数字存在");
+           } else {
+               System.out.println("数字不存在");
+           }
+   
+       }
+   
+       public static boolean selectNum(int[] arr, int num) {
+           for (int i = 0; i < arr.length; i++) {
+               if (arr[i] == num) {
+                   return true;
+               }
+           }
+           return false;
+       }
+   }
+   
+   ```
+
+   
+
+2. 二分查找
+3. 
