@@ -1620,5 +1620,314 @@ public class toParseInt {
 
    
 
-2. 二分查找
-3. 
+2. 二分查找/折半查找
+
+   > 前提条件:数组中间的数据必须有序
+   >
+   > 核心逻辑:每次排除一般的查找范围
+
+代码
+
+```java
+package 常见算法.查找算法.二分查找;
+
+public class BinarySearch {
+    public static void main(String[] args) {
+        // 需求:定义一个方法利用二分查找，获取某个元素在数组中的索引
+        int[] arr = { 7, 23, 79, 81, 103, 127, 131, 147 };
+        System.out.println(binarySearch(arr, 131));
+    }
+
+    public static int binarySearch(int[] arr, int num) {
+        // 最小索引
+        int min = 0;
+        // 最大索引
+        int max = arr.length - 1;
+        while (true) {
+
+            int mid = (max + min) / 2;
+            // 拿着mid指向的元素跟要查找的元素进行比较
+            if (min > max) {
+                return -1;
+            } else if (arr[mid] < num) {
+                // number在mid的左边
+                // max不变,min = mid + 1;
+                min = mid + 1;
+            } else if (arr[mid] > num) {
+                // number在mid的左边
+                // min不变，max = mid - 1；
+                max = mid - 1;
+            } else {
+                // 如果指向的元素相同,那就吧索引返回
+                return mid;
+            }
+        }
+
+    }
+
+}
+```
+
+**二分查找好处:提高查找效率**
+
+**使用二分查找前提:数据必须是有序的**
+
+> 如果是无序的，也可以先进行排序。但是排序之后，会改变原有数据的顺序，查找出来元素位置跟原来的元素可能是不一样的，所以排序之后再查找只能判断当前数据是否在容器当中，返回的索引无实际的意义。
+
+　**基本思想**：也称为是折半查找，属于有序查找算法。用给定值先与中间结点比较。比较完之后有三种情况：
+
+* 相等
+
+  说明找到了
+
+* 要查找的数据比中间节点小
+
+  说明要查找的数字在中间节点左边
+
+* 要查找的数据比中间节点大
+
+  说明要查找的数字在中间节点右边
+
+  ## P178-分块,分块扩展,哈希查找
+
+> 分块的原则1:前一块中的最大数据,小于后一块中所有的数据,块内无序,块间有序
+>
+> 分块的原则2:块数数量一般等于数字的格式开根号,
+
+分块查找的过程：
+
+1. 需要把数据分成N多小块，块与块之间不能有数据重复的交集。
+2. 给每一块创建对象单独存储到数组当中
+3. 查找数据的时候，先在数组查，当前数据属于哪一块
+4. 再到这一块中顺序查找
+
+```java
+class Block{//块
+    int max;//块中最大值
+    int startIndex;//起始索引
+    int endIndex;//结束索引
+}
+```
+
+![image-20240610162555184](C:\Users\何潇磊\AppData\Roaming\Typora\typora-user-images\image-20240610162555184.png)
+
+分块查找代码
+
+```java
+package 常见算法.查找算法.分块查找;
+
+public class BlockSearch {
+    public static void main(String[] args) {
+        /*
+         * 分块查找
+         * 核心思想:
+         * 块内无序 块间有序
+         * 实现步骤:
+         * 1.创建blockArr存储每一个块对象的信息
+         * 2.先查找blockArr确定查找的范围属于哪一块
+         * 3.再单独遍历这一块数据即可
+         */
+        int[] arr = { 16, 5, 9, 12, 21, 18,
+                32, 23, 37, 26, 45, 34,
+                50, 48, 61, 52, 73, 66 };
+
+        // 创建三个块对象
+        Block b1 = new Block(21, 0, 5);
+        Block b2 = new Block(45, 6, 11);
+        Block b3 = new Block(73, 12, 17);
+        // 创建数组管理三个Block(索引表)
+        Block[] blockArr = { b1, b2, b3 };
+        // 调用方法:传递索引表,数据,要查找元素
+        int num = 16;
+        int index = getIndex(blockArr, arr, num);
+        System.out.println(index);
+    }
+
+    // 利用分块查找的原理,查找num的索引
+    private static int getIndex(Block[] blockArr, int[] arr, int num) {
+        int index = fendIndexBlock(blockArr, num);
+        if (index == -1) {
+            return -1;
+        }
+        int startIndex = blockArr[index].getStartIndex();
+        int endIndex = blockArr[index].getEndIndex();
+        for (int i = startIndex; i <= endIndex; i++) {
+            if (arr[i] == num) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    // 定义一个方法,用来确定num在那一块
+    private static int fendIndexBlock(Block[] blockArr, int num) {
+        // Block b1 = new Block(21, 0, 5); -- 0
+        // Block b2 = new Block(45, 6, 11);-- 1
+        // Block b3 = new Block(73, 12, 17);-- 2
+        // 从0开始遍历Blocck数组,如果num小于其中一块的max,那说明num就是那一块的
+        for (int i = 0; i < blockArr.length; i++) {
+            if (num <= blockArr[i].getMax()) {
+                return i;
+            }
+        }
+        return -1;
+    }
+}
+```
+
+Block类代码
+
+```java
+package 常见算法.查找算法.分块查找;
+
+public class Block {
+    private int max;
+    private int startIndex;
+    private int endIndex;
+
+    public Block() {
+
+    }
+
+    public Block(int max, int startIndex, int endIndex) {
+        this.max = max;
+        this.startIndex = startIndex;
+        this.endIndex = endIndex;
+    }
+
+    public int getMax() {
+        return max;
+    }
+
+    public void setMax(int max) {
+        this.max = max;
+    }
+
+    public int getStartIndex() {
+        return startIndex;
+    }
+
+    public void setStartIndex(int startIndex) {
+        this.startIndex = startIndex;
+    }
+
+    public int getEndIndex() {
+        return endIndex;
+    }
+
+    public void setEndIndex(int endIndex) {
+        this.endIndex = endIndex;
+    }
+
+}
+
+```
+
+分块查找扩展:
+
+- 查找部分代码
+
+```java
+package 常见算法.查找算法.分块查找;
+
+public class BlockSearchTest {
+    public static void main(String[] args) {
+        // 分块查找,无规则
+        int[] arr = { 27, 22, 30, 40,
+                36, 13, 19, 16, 20,
+                7, 10,
+                43, 50, 48 };
+        BlockTest b1 = new BlockTest(22, 30, 0, 6);
+        BlockTest b2 = new BlockTest(13, 36, 4, 8);
+        BlockTest b3 = new BlockTest(7, 10, 9, 10);
+        BlockTest b4 = new BlockTest(43, 50, 11, 13);
+        BlockTest[] blockTestsArr = { b1, b2, b3, b4 };
+        int index = getIndex(blockTestsArr, arr, 7);
+        System.out.println(index);
+    }
+
+    private static int getIndex(BlockTest[] blockTestsArr, int[] arr, int num) {
+        int index = fendIndexBlock(blockTestsArr, num);
+        if (index == -1) {
+            return -1;
+        }
+        int startIndex = blockTestsArr[index].getStartIndex();
+        int endIndex = blockTestsArr[index].getEndIndex();
+        for (int i = startIndex; i <= endIndex; i++) {
+            if (arr[i] == num) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    // 定义一个方法,用来确定num在那一块
+    private static int fendIndexBlock(BlockTest[] blockArr, int num) {
+
+        for (int i = 0; i < blockArr.length; i++) {
+            if (num >= blockArr[i].getMin() && num <= blockArr[i].getMax()) {
+                return i;
+            }
+        }
+        return -1;
+    }
+}
+```
+
+- Block类代码
+
+```java
+package 常见算法.查找算法.分块查找;
+
+public class BlockTest {
+    private int min;
+    private int max;
+    private int startIndex;
+    private int endIndex;
+
+    public BlockTest(int min, int max, int startIndex, int endIndex) {
+        this.min = min;
+        this.max = max;
+        this.startIndex = startIndex;
+        this.endIndex = endIndex;
+    }
+
+    public BlockTest() {
+    }
+
+    public int getMin() {
+        return min;
+    }
+
+    public void setMin(int min) {
+        this.min = min;
+    }
+
+    public int getMax() {
+        return max;
+    }
+
+    public void setMax(int max) {
+        this.max = max;
+    }
+
+    public int getStartIndex() {
+        return startIndex;
+    }
+
+    public void setStartIndex(int startIndex) {
+        this.startIndex = startIndex;
+    }
+
+    public int getEndIndex() {
+        return endIndex;
+    }
+
+    public void setEndIndex(int endIndex) {
+        this.endIndex = endIndex;
+    }
+
+}
+
+```
+
