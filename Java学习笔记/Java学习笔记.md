@@ -682,7 +682,7 @@ public class DateDemo2 {
 |public final String format(Date date)|格式化(日期对象-> 字符串)|
 |public Date parse(String source)|解析(字符串->日期对象)|
 
-```练习代码
+```java
 
 package JavaP170;
 
@@ -1931,3 +1931,1126 @@ public class BlockTest {
 
 ```
 
+# P-179-03-冒泡排序和选择排序
+
+- 冒泡排序
+
+1. 相邻的元素两两比较,小的在左边，大的在右边
+2. 第一轮循环结束,最大值已经找到，在数组最右边
+3. 接下来的循环只要找到剩余元素中的最大值就可以了
+4. 如果有n个数据,只要循环n-1次就可以了
+
+```java
+package 常见算法.排序算法.冒泡排序;
+
+public class MaoPao {
+    public static void main(String[] args) {
+        int[] arr = { 3, 4, 1, 1, 3, 32, 32, 11, 22, 33, 10 };
+        System.out.println(arr.length);
+        for (int i : maoPao(arr)) {
+            System.out.print(i + " ");
+        }
+
+    }
+
+    public static int[] maoPao(int[] arr) {
+        // 外循环:如果有n个数据,只要执行n-1次就可以了
+        for (int i = 0; i < arr.length - 1; i++) {
+            // 内循环:每一轮中我如何比较数据并且找到当前的最大值
+            // -1:为了防止数组越界
+            // -i:为了提高效率,每一轮执行次数应该比上一轮少一次
+            for (int j = 0; j < arr.length - i - 1; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    int temp = arr[j + 1];
+                    arr[j + 1] = arr[j];
+                    arr[j] = temp;
+                }
+            }
+        }
+        return arr;
+    }
+}
+```
+
+- 选择排序
+
+选择排序:从0索引开始,拿着每一个索引上的元素跟后面的元素依次比较,小的放前面,大的放后面,以此类推
+
+![image-20240611092238455](Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.assets/image-20240611092238455.png)
+
+代码:
+
+```java
+package 常见算法.排序算法.选择排序;
+
+public class XuanZe {
+    public static void main(String[] args) {
+        int[] arr = { 3, 4, 1, 2, 5 };
+        for (int i : xuanZe(arr)) {
+            System.out.print(i + " ");
+        }
+    }
+
+    public static int[] xuanZe(int[] arr) {
+        for (int j = 0; j < arr.length - 1; j++) {
+            for (int i = j + 1; i < arr.length; i++) {
+                if (arr[j] > arr[i]) {
+                    int temp = arr[j];
+                    arr[j] = arr[i];
+                    arr[i] = temp;
+                }
+            }
+        }
+
+        return arr;
+    }
+}
+```
+
+## P180-常见算法-01-插入排序和递归算法
+
+- 插入排序
+
+将0索引的元素到N索引的元素看做是有序的，把N+1索引的元素到最后一个当成是无序的。
+
+遍历无序的数据，将遍历到的元素插入有序序列中适当的位置，如遇到相同数据，插在后面。
+
+N的范围：0~最大索引
+
+代码
+
+```java
+package 常见算法.排序算法.插入排序;
+
+public class ChaRu {
+    public static void main(String[] args) {
+        /*
+         * 将0索引的元素到N索引的元素看做是有序的，把N+1索引的元素到最后一个当成是无序的。
+         * 
+         * 遍历无序的数据，将遍历到的元素插入有序序列中适当的位置，如遇到相同数据，插在后面。
+         * 
+         * N的范围：0~最大索引
+         */
+        int[] arr = { 3, 44, 38, 5, 47, 15, 36, 26, 27, 2, 46, 4, 19, 50, 50 };
+        for (int i : chaRu(arr)) {
+            System.out.print(i + " ");
+        }
+    }
+
+    public static int[] chaRu(int[] arr) {
+        // 1.找到无序的一组数据的索引从哪里开始的
+        int startIndex = -1;
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] > arr[i + 1]) {
+                startIndex = i + 1;
+                break;
+            }
+        }
+        // 2.遍历从startIndex开始的所有元素,一次得到无序的那一组的每一个元素
+        for (int i = startIndex; i < arr.length; i++) {
+            // 问题:如何把遍历到的数据,插入到前面有序的一组当中
+            // System.out.print(arr[i] + " ");
+            // 记录当前要插入数据的索引
+            int j = i;
+            while (j > 0 && arr[j] < arr[j - 1]) {
+                // 交换位置
+                int temp = arr[j];
+                arr[j] = arr[j - 1];
+                arr[j - 1] = temp;
+                j--;
+            }
+        }
+        return arr;
+
+    }
+}
+```
+
+
+
+
+
+- 递归算法
+
+递归指方法中调用方法本身
+
+> 递归必须要有结束条件,否则会报**stackoverflow**栈内存溢出的错误
+
+递归算法的作用:把一个复杂的问题转换成一个与原问题相似的规模较小的问题来求解
+
+递归策略只需少量的程序就可以描述出解题所需过程的多次计算过程
+
+书写递归的两个核心:
+
+- 找出口:什么时候不再调用方法
+- 找规则:如何把大问题变成小问题
+
+![image-20240611121807333](Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.assets/image-20240611121807333.png)
+
+执行过程:好好看看 
+
+![image-20240611123146417](Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.assets/image-20240611123146417.png)
+
+代码
+
+```java
+package 常见算法.排序算法.快速排序.递归算法;
+
+public class DiGuiT1 {
+    public static void main(String[] args) {
+        System.out.println(getFactorialRecursion(5));
+    }
+
+    // 这个方法含义为
+    // get得到,factorial阶乘,recursion是递归
+    public static int getFactorialRecursion(int number) {
+        /*
+         * 5!=5*4!
+         * 4!=4*3!
+         * 3!=3*2!
+         * 2!=2*1!
+         * 1!=1
+         */
+        if (number == 1) {
+            return 1;
+        }
+        return number * getFactorialRecursion(number - 1);
+    }
+}
+```
+
+## P181-05-快速排序
+
+
+
+![image-20240611125555911](Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.assets/image-20240611125555911.png)
+
+代码:
+
+```java
+package 常见算法.排序算法.快速排序.递归算法;
+
+import java.util.Random;
+
+public class QuickSort {
+    public static void main(String[] args) {
+        /*
+         * 快速排序:
+         * 第一轮:把0索引的数字作为基准数,确定基准数在数组中的正确的位置
+         * 比基准数小的放左边,比基准数大的放右边
+         */
+        // YI
+        int[] arr2 = new int[1000000];
+        Random r = new Random();
+        for (int i = 0; i < arr2.length; i++) {
+            arr2[i] = r.nextInt();
+        }
+        long start = System.currentTimeMillis();
+        quickSort(arr2, 0, arr2.length - 1);
+        long end = System.currentTimeMillis();
+        System.out.println(end - start + "ms");
+        // ER
+        int[] arr = { 6, 1, 2, 7, 9, 3, 4, 5, 10, 8 };
+        quickSort(arr, 0, arr.length - 1);
+        for (int i : arr) {
+            System.out.print(i + " ");
+        }
+    }
+
+    /*
+     * 参数一:需要排序的数组
+     * 参数二:要排序数组的开始索引
+     * 参数三:要排序数组的结束索引
+     */
+    public static void quickSort(int[] arr, int startIndex, int endIndex) {
+        // 用两个变量记录要查找的范围
+        int start = startIndex;
+        int end = endIndex;
+        // 递归出口
+        if (start > end) {
+            return;
+        }
+        // 记录基准数
+        int baseNumber = arr[startIndex];
+        // 利用循环找到要交换的数字
+        while (start != end) {
+            // 利用end从后往前,找比基准数小的数字
+            while (true) {
+                if (end <= start || arr[end] < baseNumber) {
+                    break;
+                }
+                end--;
+            }
+            // 利用start从前往后,找比基准数大的数字
+            while (true) {
+                if (end <= start || arr[start] > baseNumber) {
+                    break;
+                }
+                start++;
+            }
+            // 把end和start指向的元素交换
+            int temp = arr[start];
+            arr[start] = arr[end];
+            arr[end] = temp;
+        }
+        // 当end和start指向同一个元素,那么上面的循环就会结束
+        // 表示已经找到了基准数在数组中的位置
+        // 基准数归位
+        int temp = arr[startIndex];
+        arr[startIndex] = arr[start];
+        arr[start] = temp;
+
+        // 确定6左边的范围,重复刚刚的动作
+        quickSort(arr, startIndex, start - 1);
+        // 确定6右边的范围,重复刚刚的动作
+        quickSort(arr, start + 1, endIndex);
+    }
+}
+```
+
+课程小结：
+
+![image-20240612093239233](Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.assets/image-20240612093239233.png)
+
+## P182 常见算法的API-06-Arrays
+
+Arrays
+
+​	操作数组的工具类
+
+| 方法名                                                    | 说明                     |
+| :-------------------------------------------------------- | :----------------------- |
+| public static String toString(数组)                       | 把数组拼接成一个字符串   |
+| public static int binarySearch(数组，查找的元素)          | 二分查找法查找元素       |
+| public static int[] copyOf(原数组,新数组长度)             | 拷贝数组                 |
+| public static int[] copyOfRange(原数组,起始索引,结束索引) | 拷贝数组（指定范围）     |
+| public static void fill(数组,元素)                        | 填充数组                 |
+| public static void sort(数组)                             | 按照默认方式进行数组排序 |
+| public static void sort(数组，排序规则)                   | 按照指定的规则排序       |
+
+代码:
+
+```java
+package 常见算法.常见算法的API;
+
+import java.util.Arrays;
+
+public class MyArrayDemo {
+    /*
+     * | public static String toString(数组) | 把数组拼接成一个字符串 |
+     * | public static int binarySearch(数组，查找的元素) | 二分查找法查找元素 |
+     * | public static int[] copyOf(原数组,新数组长度) | 拷贝数组 |
+     * | public static int[] copyOfRange(原数组,起始索引,结束索引) | 拷贝数组（指定范围） |
+     * | public static void fill(数组,元素) | 填充数组 |
+     * | public static void sort(数组) | 按照默认方式进行数组排序 |
+     * | public static void sort(数组，排序规则) | 按照指定的规则排序 |
+     */
+    public static void main(String[] args) {
+        int[] arr = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+        // 将数组变成字符串
+        System.out.println("--------toString---------");
+        System.out.println(Arrays.toString(arr));
+        // 二分查找
+        System.out.println("--------binarySearch---------");
+        // 二分查找的前提:数据必须是有序而且是升序,
+        // 细节1:如果元素存在,返回的是真实的索引
+        // 细节2:如果元素不存在,返回的是-插入点-1
+        System.out.println(Arrays.binarySearch(arr, 10));
+        System.out.println(Arrays.binarySearch(arr, 5));
+        // 拷贝数组
+        System.out.println("--------copyOf--------");
+        // 第一个参数是原数组
+        // 第二个参数是创建新数组的长度
+        // 如果短于原来的数组,部分拷贝
+        // 如果等于原来的数组,完全拷贝
+        // 如果长于原来的数组,会将多余的补上默认值
+        int[] newArr = Arrays.copyOf(arr, 10);
+        System.out.println(Arrays.toString(newArr));
+        // 拷贝指定长度数组
+        System.out.println("--------copyOfRange--------");
+        // 包头不包尾
+        int[] newArr1 = Arrays.copyOfRange(arr, 0, 9);
+        System.out.println(Arrays.toString(newArr1));
+        // fill填充元素
+        System.out.println("--------fill--------");
+        Arrays.fill(newArr1, 20);
+        System.out.println(Arrays.toString(newArr1));
+        // sort排序:默认情况下,给基本数据类型作升序,底层使用的是快速排序
+        System.out.println("--------sort--------");
+        int[] arrX = { 1, 2, 3, 3, 1, 1, 11, 1, 1, 1, 2, 323, 23, 1, 12, 4, 24, 24, 23, 23 };
+        Arrays.sort(arrX);
+        System.out.println(Arrays.toString(arrX));
+
+    }
+}
+```
+
+代码2:
+
+```java
+package 常见算法.常见算法的API;
+
+import java.util.Arrays;
+import java.util.Comparator;
+
+public class MyArrayDemo2 {
+    public static void main(String[] args) {
+        /*
+         * public static void sort(数组,排序规则)
+         * 细节:只能对引用数据类型排序
+         * 如果是基本数据类型,那就需要变成对应的包装了
+         */
+
+        Integer[] arr = { 1, 2, 3, 1, 22, 2, 22, 1, 111, 112 };
+        // 第二个参数是一个接口,我们在调用方法时,需要传递一个这个接口的实现类对象,作为排序的规则
+        // 但是这个实现类,我只需要使用一次,所以就没必要专门写一个类,所以直接采取匿名内部类
+        // 底层原理:
+        // 利用插入排序和二分查找的方式进行排序
+        // 默认把0索引的数据当做有序的,1到最后都是无序的
+        // 遍历无序的序列得到里面每一个元素
+        // 把A往有序序列中插入,在插入时,是利用二分查找确定A元素的插入点
+        // 拿着A元素,跟插入点的元素进行比较,比较的规则就是compare方法的方法体
+        // 如果方法的返回值是负数,拿着A元素继续向前比较
+        // 如果方法的返回值是正数,拿着A额后面元素比较
+        // 如果方法返回值是0,拿着A额后面元素比较
+        Arrays.sort(arr, new Comparator<Integer>() {
+            // compare方法参数
+            // o1表示在无序序列中的,遍历得到的每一个元素
+            // o2表示在有序序列中的,遍历得到的每一个元素
+
+            // 返回值:负数:表示当前要插入的元素是小的,放在前面
+            // 返回值:正数:表示当前要插入的元素是大的,放在后面
+            // 返回值:0:表示当前要插入的元素是一样的,放在后面
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                // System.out.println("--------------------");
+                // System.out.println("o1=" + o1);
+                // System.out.println("o2=" + o2);
+
+                return o2 - o1;
+            }
+        });
+        // lambda写法
+        Arrays.sort(arr, (Integer o1, Integer o2) -> {
+            return o2 - o1;
+        });
+        Arrays.sort(arr, (o1, o2) -> o2 - o1);
+
+        System.out.println(Arrays.toString(arr));
+        // 上面一段的简单理解:
+        // o1-o2升序 // o2-o1降序
+    }
+}
+```
+
+
+
+## P193-lambda表达式
+
+初识lambda表达式
+
+```java
+package 常见算法.常见算法的API.lambda表达式;
+
+import java.util.*;
+
+public class LambdaDemo {
+    public static void main(String[] args) {
+
+        Integer[] arr = { 1, 2, 3, 1, 22, 2, 22, 1, 111, 112 };
+        Arrays.sort(arr, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o2 - o1;
+            }
+        });
+        // lambda表达式
+        Arrays.sort(arr, (Integer o1, Integer o2) -> {
+            return o2 - o1;
+        });
+        Arrays.sort(arr, (o1, o2) -> o2 - o1);
+
+        System.out.println(Arrays.toString(arr));
+        // 上面一段的简单理解:
+        // o1-o2升序 // o2-o1降序
+    }
+}
+```
+
+**函数式编程**
+
+> 函数式编程(Functional programming)是一种思想特点
+
+面向对象:先找对象,让对象做事情
+
+函数式编程思想:忽略面向对象的语法,强调做什么,而不是谁去做.
+
+Lambda就是这种思想的体现
+
+Lambda的标准格式:
+
+```java
+()	  -> 
+
+{}
+```
+
+- （）形参
+- -> 固定格式
+- {} 方法体
+
+注意点:
+
+- Lambda可以简化匿名内部类的写法
+- Lambda只能简化函数式接口的匿名内部类写法
+
+> 函数式接口:有且只有一个抽象方法的接口叫做函数式接口,接口上方可以写上@FunctionalInterface注解
+
+1. Lambda的基本作用
+
+> 简化函数式接口的匿名内部类写法
+
+
+2. Lambda有什么使用前提
+
+> 必须是接口的匿名内部类,接口中只能有一个抽象方法
+
+3.Lambda的好处
+
+![image-20240614102747528](Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.assets/image-20240614102747528.png)
+
+Lambda的省略写法:
+
+​	省略核心:可推导,可省略
+
+省略规则:
+
+
+
+> ​     ** lambda省略规则：参数类型可以省略不写*
+>
+> ​     ** 如果只有一个参数,参数类型可以省略,同时()也可以省略*
+>
+> ​     ** 如果lambda方法体只有一行,大括号，分号，return也可以省略不写.需要同时省略*
+
+代码:
+
+```java
+package 常见算法.常见算法的API.lambda表达式;
+
+import java.util.Arrays;
+import java.util.Comparator;
+
+public class LambdaTest {
+    public static void main(String[] args) {
+        /*
+         * Lambda表达式简化Comparator接口的匿名形式
+         * 定义一个数组存储字符串.利用Arrays里里面的sort方法惊喜进行排序
+         * 要求:按照字符串长度怕排序，短的在前面,长的在后面
+         */
+
+        String[] arr = { "hello", "world", "Mike", "Java", "C" };
+        Arrays.sort(arr, new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return o1.length() - o2.length();
+            }
+
+        });
+        //省略写法
+        Arrays.sort(arr, (o1, o2) -> o1.length() - o2.length());
+        System.out.println(Arrays.toString(arr));
+    }
+}
+
+```
+
+## P184五道经典算法题
+
+### 题目1:
+
+​          *题目介绍:
+​         *定义数组并且存储一些女朋友对象,利用Arrays中的sort排序
+​         *要求1:属性要有姓名,年龄,身高
+​         *要求2:按照年龄大小排序,年龄一样,按身高来排,身高一样,按字母顺序排
+​         *姓名中不能出现中文或者特殊字符,会涉及到后面的知识
+
+|                                  | 说明               |
+| -------------------------------- | ------------------ |
+| public int compareTo(String str) | 比较字符先后的方法 |
+
+> 解释：字符会先被转换为ASCII码表,然后进行比较,如果调用的字符大于传入的字符,返回1,小于则返回0
+>
+> 如果长度大于1，则会遍历,直到找到不同 
+
+​         
+
+
+
+
+
+"a".compareTo("b")
+
+返回值-1
+
+意思是a小于B
+
+```java
+String d = "d";
+String c = "c";
+int i = d.compareTo(c);
+System.out.println(i);
+//返回
+1
+```
+
+如果长度大于1个字符,则遍历
+
+代码
+
+```java
+package 常见算法.五道算法题.T1;
+
+public class GirlFriend {
+     private String name;
+     private int age;
+
+     public GirlFriend() {
+
+     }
+
+     public GirlFriend(String name, int age, int height) {
+          this.name = name;
+          this.age = age;
+          this.height = height;
+     }
+
+     public String getName() {
+          return name;
+     }
+
+     public void setName(String name) {
+          this.name = name;
+     }
+
+     public int getAge() {
+          return age;
+     }
+
+     public void setAge(int age) {
+          this.age = age;
+     }
+
+     public int getHeight() {
+          return height;
+     }
+
+     public void setHeight(int height) {
+          this.height = height;
+     }
+
+     private int height;
+
+     @Override
+     public String toString() {
+          return "GirlFriend [name=" + name + ", age=" + age + ", height=" + height + "]";
+     }
+
+}
+
+package 常见算法.五道算法题.T1;
+
+import java.util.Arrays;
+import java.util.Comparator;
+
+public class Test1 {
+    public static void main(String[] args) {
+        /*
+         * 题目介绍:
+         * 定义数组并且存储一些女朋友对象,利用Arrays中的sort排序
+         * 要求1:属性要有姓名,年龄,身高
+         * 要求2:按照年龄大小排序,年龄一样,按身高来排,身高一样,按字母顺序排
+         * 姓名中不能出现中文或者特殊字符,会涉及到后面的知识
+         */
+        String d = "dac";
+        String c = "da";
+        int i = d.compareTo(c);
+        System.out.println(i);
+        GirlFriend[] girlArr = { new GirlFriend("wb", 20, 170), new GirlFriend("wa", 20, 160),
+                new GirlFriend("wc", 20, 170), new GirlFriend("wx", 10, 160) };
+
+        // 利用Arrays中的sort排序,匿名内部类
+        Arrays.sort(girlArr, new Comparator<GirlFriend>() {
+            @Override
+            public int compare(GirlFriend o1, GirlFriend o2) {
+                // 要求2:按照年龄大小排序,年龄一样,按身高来排,身高一样,按字母顺序排
+                double temp = o1.getAge() - o2.getAge();
+                temp = temp == 0 ? o1.getHeight() - o2.getHeight() : temp;
+                temp = temp == 0 ? o1.getName().compareTo(o2.getName()) : temp;
+                if (temp > 0) {
+                    return 1;
+                } else if (temp < 0) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+        // lambda形式
+        Arrays.sort(girlArr, (o1, o2) -> {
+            double temp = o1.getAge() - o2.getAge();
+            temp = temp == 0 ? o1.getHeight() - o2.getHeight() : temp;
+            temp = temp == 0 ? o1.getName().compareTo(o2.getName()) : temp;
+            if (temp > 0) {
+                return 1;
+            } else if (temp < 0) {
+                return -1;
+            } else {
+                return 0;
+            }
+        });
+        for (GirlFriend girlFriend : girlArr) {
+            System.out.println(girlFriend.toString());
+        }
+    }
+}
+
+```
+
+### 题目2:
+
+> */**
+>
+> ​     ** 练习题2:有一对兔子,从出生后第三个月起每个月都生一对兔子,小兔子长到三个月后每个月有生一对兔子*
+>
+> ​     ** 假如兔子都不死,第十二个月兔子对数是多少*
+>
+> ​     ** <斐波那契数列>*
+>
+> ​     **/*
+
+代码:
+
+```java
+package 常见算法.五道算法题.T2;
+
+public class Test2 {
+    public static void main(String[] args) {
+        /*
+         * 练习题2:有一对兔子,从出生后第三个月起每个月都生一对兔子,小兔子长到三个月后每个月有生一对兔子
+         * 假如兔子都不死,第十二个月兔子对数是多少
+         * <斐波那契数列>
+         */
+        // 方法1:创建长度为12的数组,给0和1索引赋值为1,
+        // 循环相加
+        int[] arr = new int[12];
+        arr[0] = 1;
+        arr[1] = 1;
+        for (int i = 2; i < arr.length; i++) {
+            arr[i] = arr[i - 1] + arr[i - 2];
+        }
+        System.out.println(arr[11]);
+        // 方式2(递归):
+        // 考虑出口
+        // 找到规律
+        //Fn(12)=Fn(11)+Fn(10)
+        //....
+        //Fn(2)=1
+        //Fn(1)=1
+        System.out.println(fibonacciSequence(12));
+
+    }
+
+    public static int fibonacciSequence(int num) {
+
+        if (num == 1 || num == 2) {
+            return 1;
+        }
+        return fibonacciSequence(num - 1) + fibonacciSequence(num - 2);
+    }
+}
+```
+
+### 题目3
+
+> 猴子吃桃子:*// 有一堆桃子,猴子每天吃掉一半,在多吃一个,以后每天都吃一半,再多吃一个,第十天(还没吃)*
+>
+> ​    *// 发现只剩一个桃子了,请问总控有多少桃子*
+>
+> ​    *// day10:1*
+>
+> ​    *// day9:(day10+1)\*2*
+>
+> ​    *// day8:(day9+1)\*2*
+>
+> ​    *// ...*
+>
+> ​    *// day1:(day2+1)\*2*
+
+代码:
+
+```java
+package 常见算法.五道算法题.T3;
+
+public class Test3 {
+    public static void main(String[] args) {
+        // 有一堆桃子,猴子每天吃掉一半,在多吃一个,以后每天都吃一半,再多吃一个,第十天(还没吃)
+        // 发现只剩一个桃子了,请问总控有多少桃子
+        // day10:1
+        // day9:(day10+1)*2
+        // day8:(day9+1)*2
+        // ...
+        // day1:(day2+1)*2
+        System.out.println(fibonacciSequence(1));
+
+    }
+
+    public static int fibonacciSequence(int day) {
+        // 反向递归
+        if (day <= 0 || day >= 11) {
+            System.out.println("当前时间错误");
+            return -1;
+        }
+        if (day == 10) {
+            return 1;
+        }
+        return (fibonacciSequence(day + 1) + 1) * 2;
+    }
+}
+```
+
+这道题还不了解,多多看看
+
+### 题目4
+
+> 爬楼梯:小明有时候一次爬一个台阶,有的时候爬两个台阶,如果楼梯有二十个台阶,小明一共有多少种爬法
+
+ 代码
+
+```java
+package 常见算法.五道算法题.T4;
+
+public class Test4 {
+    public static void main(String[] args) {
+        /*
+         * 爬楼梯:小明有时候一次爬一个台阶,有的时候爬两个台阶,
+         * 如果楼梯有二十个台阶,
+         * 小明一共有多少种爬法
+         */
+        System.out.println(getSum(20));
+    }
+
+    public static int getSum(int num) {
+        if (num == 1) {
+            return 1;
+        }
+        if (num == 2) {
+            return 2;
+        }
+        if (num == 3) {
+            return 3;
+        }
+        return getSum(num - 1) + getSum(num - 2) + getSum(num - 3);
+    }
+}
+好好看看多回来复习复习
+    
+```
+
+## P185 集合进阶-01-单列集合顶层接口-Collection
+
+**集合体系结构**
+
+- Collection单列集合
+  - 每次只添加一个
+- Map双列集合
+  - 每次添加一对数据
+
+![image-20240618144902438](Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.assets/image-20240618144902438.png)
+
+![image-20240618145301037](Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.assets/image-20240618145301037.png)
+
+- list系列集合
+
+> 添加的元素有序(存和取顺序一致),可重复,有索引
+
+- set系列集合
+
+> 添加的元素无序,不重复,无索引
+
+### Collection 
+
+> Collection是单列集合的祖宗接口，他的功能所有单列集合都可以继承使用
+
+| 方法名称                            | 说明                             |
+| ----------------------------------- | -------------------------------- |
+| public boolean add(E e)             | 把给定的对象添加到当前集合中     |
+| public void clear()                 | 清空集合中所有的元素             |
+| public boolean remove(E e)          | 把给定的对象在当前集合中删除     |
+| public boolean contains(Object obj) | 判断当前集合中是否包含给定的对象 |
+| public boolean isEmpty()            | 判断当前集合是否为空             |
+| public int size()                   | 返回集合中元素的个数/集合的长度  |
+
+代码
+
+```java
+package MyCollection;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+public class MyCollectionDemo1 {
+    public static void main(String[] args) {
+        /*
+         * | 方法名称 | 说明 |
+         * | ----------------------------------- | -------------------------------- |
+         * | public boolean add(E e) | 把给定的对象添加到当前集合中 |
+         * | public void clear() | 清空集合中所有的元素 |
+         * | public boolean remove(E e) | 把给定的对象在当前集合中删除 |
+         * | public boolean contains(Object obj) | 判断当前集合中是否包含给定的对象 |
+         * | public boolean isEmpty() | 判断当前集合是否为空 |
+         * | public int size() | 返回集合中元素的个数/集合的长度 |
+         */
+        // Collection是一个接口,不能直接生成他的对象,所以
+        // 如果要学习他的方法,智能创建他实现类的对象
+        // 实现类ArrayList
+        // 下列是使用多态的形式创建的
+        Collection<String> coll = new ArrayList<>();
+        // 1.添加元素
+        // 细节:返回值(true false),如果往list集合内添加数据,那么方法永远返回true,因为list允许元素重复
+        // 细节:如果往Set集合内添加数据,如果数据没有,方法返回true,则添加成功,如果数据已存在,返回false,则添加失败
+        // 因为Set集合不允许重复
+        coll.add("a");
+        coll.add("a");
+        coll.add("b");
+        coll.add("c");
+        coll.add("c");
+
+        System.out.println(coll);
+        // coll.clear();
+        // 删除元素不存在会返回false,成功则返回true
+        // 不能通过索引删除,只能通过元素删除
+        coll.remove("a");
+        // 底层依赖equals方法来判断是否存在
+        System.out.println(coll.contains("c"));
+        System.out.println(coll.size());
+        System.out.println(coll);
+    }
+}
+```
+
+代码2
+
+```java
+package MyCollection;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+public class MyCollectionDemo2 {
+    public static void main(String[] args) {
+        Collection<Student> list = new ArrayList<>();
+        Student s1 = new Student("zhangsan", 23);
+        Student s2 = new Student("Sili", 24);
+        Student s3 = new Student("aa", 12);
+
+        Student s4 = new Student("zhangsan", 23);
+        list.add(s1);
+        list.add(s4);
+        list.add(s3);
+        list.add(s2);
+        System.out.println(list.contains(s4));
+    }
+}
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public Student(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public Student() {
+
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = prime * result + age;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Student other = (Student) obj;
+        if (name == null) {
+            if (other.name != null)
+                return false;
+        } else if (!name.equals(other.name))
+            return false;
+        if (age != other.age)
+            return false;
+        return true;
+    }
+
+}
+```
+
+## P186-集合进阶-迭代器
+
+Collection的遍历方式
+
+**迭代器遍历**
+
+- 迭代器不依赖索引
+- 迭代器在Java中的类是Iterator,迭代器是集合专用的遍历方式
+
+Collection集合获取迭代器
+
+| 方法名                 | 说明                                   |
+| ---------------------- | -------------------------------------- |
+| Iterator<E> iterator() | 返回迭代器对象,默认指向当前集合的0索引 |
+
+Iterator中的常见方法
+
+| 方法名称          | 说明                                                    |
+| ----------------- | ------------------------------------------------------- |
+| boolean hasNext() | 判断当前位置是否有元素,有元素返回true,没有元素返回false |
+| E next()          | 获取当前位置的元素,并将迭代器对象移动到下一个位置       |
+
+
+
+*// 细节注意点:*
+
+​    *// 1.报错NoSuchElementException*
+
+​    *// 2.迭代器遍历完毕,指针不会复位*
+
+​    *// 3.循环中只能使用一次next方法*
+
+​    *// 4.迭代器遍历时,不能使用集合的方法进行增加或删除*‘
+
+![image-20240620155751285](Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.assets/image-20240620155751285.png)
+
+## P187-集合进阶-03-增强for介lambda表达式
+
+
+
+增强for遍历
+
+- 增强for循环的底层就是迭代器,为了简化迭代器的代码书写的
+- JDK5以后出现,其内部就是一个Iterator迭代器
+
+- 所有的单列集合和数组才可以使用增强for循环进行遍历
+
+格式如下
+
+```java
+for(元素类型 变量名:数组或者是集合){
+    
+}
+```
+
+ 增强for循环细节:
+
+>  如果修改了增强for循环里面的变量,原来数组的数据不会被改变
+
+### Lambda表达式遍历
+
+
+
+| 方法名                                               | 说明               |
+| ---------------------------------------------------- | ------------------ |
+| default void forEach(Consumer <? extends T> action); | 结合Lambda遍历集合 |
+
+
+
+*forEach底层原理*
+
+​     ** 其实也会自己遍历集合,依次得到每一个元素*
+
+​     ** 把得到的每一个元素,一次传递给accept方法*
+
+​     ** s代表集合中的每一个元素*
+
+
+
+![image-20240624085928035](Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.assets/image-20240624085928035.png)
+
+代码(匿名内部类形式):
+
+```java
+coll.forEach(new Consumer<String>() {
+            // t表示其中的每一个元素
+            @Override
+            public void accept(String t) {
+                System.out.println(t);
+            }
+        });
+```
+
+代码(Lambda表达式):
+
+```java
+coll.forEach(t -> System.out.println(t));
+```
+
+## P188-集合进阶-04-List中常见的方法以及5种遍历方式
+
+List集合的特有方法:
+
+- Collection的方法List都继承了
+- List集合因为有索引,所以多了很多索引操作的方法
+
+| 方法名                        | 说明                                |
+| ----------------------------- | ----------------------------------- |
+| void add(int index,E element) | 在集合中指定位置插入指定元素        |
+| E remove(int index)           | 删除指定位置的元素,返回被删除的元素 |
+| E set(int index,E element)    | 修改索引处的元素,返回被修改的元素   |
+| E get(int index)              | 返回指定索引处的元素                |
+
+其他四种省略:
+
+**列表迭代器**
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# JDBC学习
