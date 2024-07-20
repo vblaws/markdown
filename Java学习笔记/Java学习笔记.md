@@ -3029,28 +3029,114 @@ List集合的特有方法:
 | E set(int index,E element)    | 修改索引处的元素,返回被修改的元素   |
 | E get(int index)              | 返回指定索引处的元素                |
 
-其他四种省略:
+其他四种遍历方式省略:
 
-**列表迭代器**
+**列表迭代器**(ListIterator)
+
+ListIterator可以在遍历时添加元素,也可以倒着遍历
+
+![image-20240627084033435](Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.assets/image-20240627084033435.png)
+
+代码:
+
+```java
+package MyList;
+
+import java.util.*;
+
+public class MyListIteratorDemo {
+    public static void main(String[] args) {
+        List<String> list = new ArrayList<>();
+        list.add("a");
+        list.add("B");
+        list.add("null");
+        list.add("ada");
+        // ListIterator,索引从零开始
+        ListIterator<String> lt = list.listIterator();
+        // hasNext检测当前位置是否存在元素
+        while (lt.hasNext()) {
+            String str = lt.next();
+            if ("a".equals(str)) {
+                lt.add("我前面一个是a");
+            }
+        }
+        System.out.println(list);
+
+        System.out.println("-----------------------------");
+        // while (lt.hasPrevious()) {
+        // System.out.println(lt.previous());
+        // }
+    }
+}
+```
 
 
 
 
 
+## P-189-集合进阶-05-数据结构(栈,队列,数组,链表)
 
+什么是数据结构:
 
+>  计算机存储,组织数据的方式
+>
+> 是指数据相互之间是以什么方式排列在一起的
+>
+> 数据结构的出现是为了更加方便的遍历和使用数据,
+>
+> 一般情况下,精心选择的数据结构可以带来更高的运行效率或者存储效率
 
+不同的业务场景需要使用不同的数据结构
 
+要了解:
 
+- 每种数据结构的样子
+- 如何添加数据
+- 如何删除数据 
 
+常见的数据结构
 
+1. 栈
+2. 队列
+3. 数组
+4. 链表
+5. 二叉树
+6. 二叉查找树
+7. 平衡二叉树
+8. 红黑树
 
+### 数据结构(栈)
 
+特点:后进先出,先进后出
 
+数据进入栈模型的过程称为:**压/进栈**
 
+数据离开栈模型的过程称为:**弹/出栈**
 
+![image-20240627091136103](Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.assets/image-20240627091136103.png)
 
+![image-20240627091206560](Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.assets/image-20240627091206560.png)
 
+### 数据结构(队列)
 
+队列特点:先进先出,后进后出
 
-# JDBC学习
+数据从后端进入队列模型的过程为:**入队列**
+数据从前端离开队列模型的过程为:**出队列**
+
+### 数据结构(链表)
+
+![image-20240627094646096](Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.assets/image-20240627094646096.png)
+
+![image-20240627094718688](Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.assets/image-20240627094718688.png)
+
+![image-20240627094734747](Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.assets/image-20240627094734747.png)
+
+## P190-集合进阶-06-ArrayList源码分析
+
+ArrayList集合底层原理
+
+1. 利用空参创建的集合,在底层创建一个默认长度为0的数组
+2. 添加第一个元素时,底层会创建一个新的长度为10的数组数组的名字叫`elementData`
+3. 存满时,会扩容1.5倍
+4. 如果一次添加多个元素,1.5倍也放不下,则以新创建的长度为标准
